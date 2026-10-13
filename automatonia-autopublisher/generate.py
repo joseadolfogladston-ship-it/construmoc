@@ -20,37 +20,69 @@ prompt = (
     "requerem revisão humana. Começa com 'RASCUNHO — NÃO PUBLICADO'. "
     "Responde em Markdown puro."
 )
-model = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
-url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent"
-payload = json.dumps({"contents":[{"parts":[{"text":prompt}]}],"generationConfig":{"temperature":0.65,"maxOutputTokens":8192}}).encode()
-req = urllib.request.Request(url, data=payload, headers={"Content-Type":"application/json", "x-goog-api-key":key}, method="POST")
+# Consulta modelos autorizados para esta chave, sem assumir um modelo fixo.
+headers = {"Content-Type": "application/json", "x-goog-api-key": key}
+list_req = urllib.request.Request("https://generativelanguage.googleapis.com/v1beta/models?pageSize=100", headers=headers)
 try:
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        data=json.load(resp)
+    with urllib.request.urlopen(list_req, timeout=35) as resp:
+        listing = json.load(resp)
 except urllib.error.HTTPError as e:
-    raw = e.read(4096).decode("utf-8", errors="replace")
+    code = e.code
+    e.read()
+    sys.exit("Consulta de modelos falhou HTTP %s. Confirma permissões da chave e quota." % code)
+except (urllib.error.URLError, TimeoutError):
+    sys.exit("Erro de rede na consulta de modelos Gemini.")
+available = [
+    m["name"].split("/", 1)[1] for m in listing.get("models", [])
+    if "generateContent" in m.get("supportedGenerationMethods", [])
+    and m.get("name", "").startswith("models/")
+    and "gemini" in m.get("name", "").lower()
+]
+if not available:
+    sys.exit("A API não devolveu modelos compatíveis com generateContent.")
+requested = os.environ.get("GEMINI_MODEL", "").strip()
+ordered = []
+if requested and requested in available:
+    ordered.append(requested)
+ordered += sorted(
+    (m for m in available if m not in ordered),
+    key=lambda m: (0 if "flash" in m and "preview" not in m else 1 if "flash" in m else 2,
+                   0 if "2.5" in m else 1, m)
+)
+payload = json.dumps({
+    "contents": [{"parts": [{"text": prompt}]}],
+    "generationConfig": {"temperature": 0.65, "maxOutputTokens": 8192}
+}).encode()
+data = None
+for model in ordered[:5]:
+    url = "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent"
+    req = urllib.request.Request(url, data=payload, headers=headers, method="POST")
     try:
-        details = json.loads(raw).get("error", {})
-        message = str(details.get("message", "")).replace(key, "[REDACTED]")
-        status = details.get("status", "UNKNOWN")
-    except (ValueError, AttributeError):
-        message, status = "Resposta inválida do fornecedor", "UNKNOWN"
-    messages = {
-        400: "Pedido recusado. Verificar modelo e parâmetros.",
-        401: "Credencial não aceite pelo Gemini.",
-        403: "Chave bloqueada, sem permissão ou serviço indisponível para a conta.",
-        404: "Modelo não encontrado ou indisponível para esta API.",
-        429: "Limite de quota ou de pedidos atingido. Não é possível gerar agora.",
-        500: "Erro interno do fornecedor Gemini.",
-        503: "Serviço de geração indisponível temporariamente.",
-    }
-    guidance = messages.get(e.code, "O fornecedor rejeitou o pedido.")
-    print("ERRO GEMINI HTTP", e.code, "-", status)
-    print("CAUSA:", guidance)
-    print("DETALHE:", message[:500])
-    sys.exit(1)
-except (urllib.error.URLError, TimeoutError) as e:
-    sys.exit("ERRO DE REDE: não foi possível comunicar com o Gemini.")
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = json.load(resp)
+        print("Modelo utilizado:", model)
+        break
+    except urllib.error.HTTPError as e:
+        code = e.code
+        raw = e.read(4096).decode("utf-8", errors="replace")
+        if code == 404:
+            print("Modelo indisponível:", model, "- tentar outro modelo autorizado.")
+            continue
+        try:
+            msg = json.loads(raw).get("error", {}).get("message", "")
+            msg = str(msg).replace(key, "[REDACTED]")[:350]
+        except (ValueError, AttributeError):
+            msg = ""
+        print("Erro Gemini HTTP", code, "no modelo", model)
+        if msg:
+            print("Detalhe:", msg)
+        if code == 429:
+            sys.exit("Quota insuficiente. Nenhum novo pedido será feito nesta execução.")
+        sys.exit("Geração interrompida. Verificar credenciais, permissões ou parâmetros.")
+    except (urllib.error.URLError, TimeoutError):
+        sys.exit("Erro de rede durante a geração com Gemini.")
+if data is None:
+    sys.exit("Nenhum dos modelos anunciados pela API aceitou a geração (HTTP 404).")
 
 parts=data.get("candidates",[{}])[0].get("content",{}).get("parts",[])
 content="\n".join(p.get("text","") for p in parts).strip()
