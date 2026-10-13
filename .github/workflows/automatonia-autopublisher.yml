@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '17 * * * *'
 permissions:
-  contents: write
+  contents: read
 jobs:
   draft:
     if: github.repository == 'joseadolfogladston-ship-it/construmoc'
@@ -13,18 +13,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          persist-credentials: true
       - name: Gerar rascunho com Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python3 automatonia-autopublisher/generate.py
-      - name: Guardar rascunho no branch
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add automatonia-autopublisher/drafts/
-          if ! git diff --cached --quiet; then
-            git commit -m "chore(automatonia): add unpublished ebook draft"
-            git push
-          fi
+      - name: Guardar rascunhos em artefacto privado do Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: ebooks-rascunhos-${{ github.run_id }}
+          path: automatonia-autopublisher/drafts/*.md
+          if-no-files-found: ignore
+          retention-days: 7
