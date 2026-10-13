@@ -28,7 +28,30 @@ try:
     with urllib.request.urlopen(req, timeout=120) as resp:
         data=json.load(resp)
 except urllib.error.HTTPError as e:
-    sys.exit("Gemini request failed: HTTP " + str(e.code))
+    raw = e.read(4096).decode("utf-8", errors="replace")
+    try:
+        details = json.loads(raw).get("error", {})
+        message = str(details.get("message", "")).replace(key, "[REDACTED]")
+        status = details.get("status", "UNKNOWN")
+    except (ValueError, AttributeError):
+        message, status = "Resposta inválida do fornecedor", "UNKNOWN"
+    messages = {
+        400: "Pedido recusado. Verificar modelo e parâmetros.",
+        401: "Credencial não aceite pelo Gemini.",
+        403: "Chave bloqueada, sem permissão ou serviço indisponível para a conta.",
+        404: "Modelo não encontrado ou indisponível para esta API.",
+        429: "Limite de quota ou de pedidos atingido. Não é possível gerar agora.",
+        500: "Erro interno do fornecedor Gemini.",
+        503: "Serviço de geração indisponível temporariamente.",
+    }
+    guidance = messages.get(e.code, "O fornecedor rejeitou o pedido.")
+    print("ERRO GEMINI HTTP", e.code, "-", status)
+    print("CAUSA:", guidance)
+    print("DETALHE:", message[:500])
+    sys.exit(1)
+except (urllib.error.URLError, TimeoutError) as e:
+    sys.exit("ERRO DE REDE: não foi possível comunicar com o Gemini.")
+
 parts=data.get("candidates",[{}])[0].get("content",{}).get("parts",[])
 content="\n".join(p.get("text","") for p in parts).strip()
 if len(content)<1200:
