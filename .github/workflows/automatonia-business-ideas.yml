@@ -1,22 +1,37 @@
-name: Automatonia - ideias de negocios digitais (rascunhos)
+name: Automatonia - negocios digitais (testes e campanhas)
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'automatonia-digital/**'
+      - '.github/workflows/automatonia-business-ideas.yml'
 permissions:
   contents: read
-
 jobs:
-  preparar-campanhas:
+  validar:
     if: github.repository == 'joseadolfogladston-ship-it/construmoc'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Checkout
+      - name: Obter codigo
         uses: actions/checkout@v4
-      - name: Validar a carteira
+      - name: Validar seis canais
         run: python3 automatonia-digital/business_factory.py --validate
-      - name: Preparar seis campanhas para revisao
+      - name: Verificar ficheiros de vitrine
+        run: python3 -m unittest discover -s automatonia-digital/tests -v
+      - name: Verificar sintaxe JavaScript
+        run: node --check automatonia-digital/site/caixa.js
+  preparar-campanhas:
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'joseadolfogladston-ship-it/construmoc'
+    needs: validar
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obter codigo
+        uses: actions/checkout@v4
+      - name: Criar seis campanhas para aprovacao
         run: python3 automatonia-digital/business_factory.py
-      - name: Guardar planos para revisao
+      - name: Guardar rascunhos privados temporarios
         uses: actions/upload-artifact@v4
         with:
           name: automatonia-planos-${{ github.run_id }}
