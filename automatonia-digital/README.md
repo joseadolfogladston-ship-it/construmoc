@@ -52,6 +52,41 @@ O segundo comando cria um plano de marketing em `automatonia-digital/drafts/`. O
 
 O workflow `.github/workflows/automatonia-business-ideas.yml` executa testes ao abrir um pull request. Para **gerar campanhas**, é necessário executá-lo manualmente (workflow_dispatch). Os planos são guardados como artefactos temporários privados do GitHub Actions. Não há envio automático de e-mails, publicação, despesas, cobranças ou criação de contas.
 
+## Centro de Marketing Digital (fase 2)
+
+- **Abrir:** `site/marketing.html` ou seguir o botão «Centro de Marketing» em `site/index.html`.
+- **Seis modelos de campanha:** redes sociais, pesquisa/SEO, vitrine, tutorial, análises e newsletter consentida.
+- **Editor:** cria, personaliza, aprova e organiza rascunhos por negócio, canal, plataforma e data prevista.
+- **Indicadores:** regista visualizações, contactos, vendas, receita e custo. Todos são **manuais**: sem ligação ao Facebook, Instagram, Google Ads ou outra plataforma.
+- **Exportação:** CSV com protecção contra fórmulas de folhas de cálculo; backup/importação JSON com validação.
+- **Privacidade:** os registos ficam em `localStorage` do navegador, sem conta, sem servidor e sem enviar dados. Não registes contactos pessoais, senhas ou informação sensível nos textos das campanhas.
+- **Segurança operacional:** marcar uma campanha como «Publicado» **não a publica**. A acção só guarda o estado local e pede confirmação.
+- **Limite:** máximo de 300 campanhas no protótipo; exporta regularmente o backup.
+- **Compatibilidade:** usa um servidor HTTP local, preferencialmente `http://127.0.0.1:8000/marketing.html`. O armazenamento local pode estar restrito quando se abre o HTML directamente do disco.
+
+### Como iniciar no Windows
+
+Na pasta `automatonia-digital`, dá dois cliques em `iniciar-automatonia.bat`. O servidor usa apenas `127.0.0.1` (não fica aberto à rede local). Mantém a janela do terminal aberta enquanto experimentas.
+
+Alternativamente, na raiz do repositório:
+
+```powershell
+python -m http.server 8000 --bind 127.0.0.1 --directory automatonia-digital/site
+```
+
+Acede a `http://127.0.0.1:8000/marketing.html`.
+
+### Verificações automáticas
+
+```powershell
+python -m unittest discover -s automatonia-digital/tests -v
+node --check automatonia-digital/site/marketing-core.js
+node --check automatonia-digital/site/marketing.js
+node --test automatonia-digital/tests/marketing_core.test.js
+```
+
+Os testes automatizados não substituem a verificação em navegadores reais.
+
 ## Próximos passos reais para vender
 
 1. Obter feedback de 10 potenciais clientes para o Gestor de Caixa e validar necessidades.
