@@ -66,8 +66,21 @@
       </div>
 
       <div class="mkt-column mkt-column-wide">
+        <section class="mkt-panel" id="calendar-panel">
+          <div class="mkt-panel-title"><span class="mkt-num">04</span><h2>Calendário editorial</h2></div>
+          <div class="mkt-calendar-toolbar">
+            <div class="mkt-calendar-month" id="calendar-month">Outubro 2026</div>
+            <div class="mkt-calendar-nav">
+              <button type="button" id="calendar-prev" aria-label="Mês anterior" class="mkt-small-btn">←</button>
+              <button type="button" id="calendar-today" class="mkt-small-btn">Hoje</button>
+              <button type="button" id="calendar-next" aria-label="Mês seguinte" class="mkt-small-btn">→</button>
+            </div>
+          </div>
+          <div class="mkt-calendar-scroller"><div id="calendar-grid" class="mkt-calendar" aria-label="Campanhas por data prevista"></div></div>
+          <p class="fine">O calendário apresenta datas que registaste. Não envia publicações automaticamente.</p>
+        </section>
         <section class="mkt-panel">
-          <div class="mkt-panel-title"><span class="mkt-num">04</span><h2>Quadro de campanhas</h2></div>
+          <div class="mkt-panel-title"><span class="mkt-num">05</span><h2>Quadro de campanhas</h2></div>
           <div class="mkt-filters">
             <label>Negócio
               <select id="filter-business"><option value="">Todos os negócios</option><option value="ebooks">eBooks e guias</option><option value="templates">Modelos e ferramentas</option><option value="afiliados">Marketing de afiliados</option></select>
@@ -83,7 +96,7 @@
         </section>
 
         <section class="mkt-panel" id="editor-panel">
-          <div class="mkt-panel-title"><span class="mkt-num">05</span><h2 id="editor-heading">Editar campanha</h2></div>
+          <div class="mkt-panel-title"><span class="mkt-num">06</span><h2 id="editor-heading">Editar campanha</h2></div>
           <p>Revê o texto antes de publicar manualmente. A opção «Publicado» apenas actualiza este quadro.</p>
           <form id="campaign-form" novalidate>
             <div class="mkt-two">
