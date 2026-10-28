@@ -1,0 +1,25 @@
+name: Automatonia - ideias de negocios digitais (rascunhos)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  preparar-campanhas:
+    if: github.repository == 'joseadolfogladston-ship-it/construmoc'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validar a carteira
+        run: python3 automatonia-digital/business_factory.py --validate
+      - name: Preparar seis campanhas para revisao
+        run: python3 automatonia-digital/business_factory.py
+      - name: Guardar planos para revisao
+        uses: actions/upload-artifact@v4
+        with:
+          name: automatonia-planos-${{ github.run_id }}
+          path: automatonia-digital/drafts/*.md
+          if-no-files-found: error
+          retention-days: 7
