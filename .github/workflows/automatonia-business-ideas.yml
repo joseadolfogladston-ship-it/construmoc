@@ -20,7 +20,12 @@ jobs:
       - name: Verificar ficheiros de vitrine
         run: python3 -m unittest discover -s automatonia-digital/tests -v
       - name: Verificar sintaxe JavaScript
-        run: node --check automatonia-digital/site/caixa.js
+        run: |
+          node --check automatonia-digital/site/caixa.js
+          node --check automatonia-digital/site/marketing-core.js
+          node --check automatonia-digital/site/marketing.js
+      - name: Testar regras do Centro de Marketing
+        run: node --test automatonia-digital/tests/marketing_core.test.js
   preparar-campanhas:
     if: github.event_name == 'workflow_dispatch' && github.repository == 'joseadolfogladston-ship-it/construmoc'
     needs: validar
