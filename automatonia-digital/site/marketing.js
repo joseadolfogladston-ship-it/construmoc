@@ -13,6 +13,7 @@
   let activeId = null;
   let blockedStorage = false;
   let storageWarning = '';
+  let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
   function fmt(cents) {
     const sign = cents < 0 ? '−' : '';
@@ -123,7 +124,47 @@
       box.appendChild(card);
     }
   }
-  function render() {renderOverview();renderList();}
+
+  function renderCalendar() {
+    const y = calendarMonth.getFullYear(), m = calendarMonth.getMonth();
+    const label = new Intl.DateTimeFormat('pt-MZ', {month: 'long', year: 'numeric'}).format(calendarMonth);
+    $('calendar-month').textContent = label.charAt(0).toUpperCase() + label.slice(1);
+    const grid = $('calendar-grid');
+    grid.replaceChildren();
+    for (const w of ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']) {
+      grid.appendChild(textEl('div', 'mkt-weekday', w));
+    }
+    const offset = (new Date(y, m, 1).getDay() + 6) % 7;
+    const days = new Date(y, m + 1, 0).getDate();
+    const count = Math.ceil((offset + days) / 7) * 7;
+    const now = new Date();
+    const today = [now.getFullYear(), String(now.getMonth()+1).padStart(2,'0'),
+      String(now.getDate()).padStart(2,'0')].join('-');
+    for (let i=0; i<count; i++) {
+      const day = i - offset + 1;
+      if (day < 1 || day > days) {
+        grid.appendChild(textEl('div', 'mkt-day empty-day', ''));
+        continue;
+      }
+      const key = y + '-' + String(m+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+      const current = campaigns.filter(c => c.scheduledAt.slice(0,10) === key)
+        .sort((a,b) => a.scheduledAt.localeCompare(b.scheduledAt));
+      const cell = textEl('div', 'mkt-day' + (key === today ? ' current-day' : ''));
+      const dayHeading = textEl('div', 'mkt-day-number', day);
+      cell.appendChild(dayHeading);
+      for (const c of current.slice(0,3)) {
+        const button = textEl('button', 'mkt-calendar-event '+c.status, c.title);
+        button.type = 'button';
+        button.title = c.scheduledAt.slice(11) + ' · ' + c.title + ' · ' + nodeStatus(c.status);
+        button.setAttribute('aria-label', key + ', ' + c.title + ': editar campanha');
+        button.addEventListener('click', () => openEditor(c));
+        cell.appendChild(button);
+      }
+      if (current.length > 3) cell.appendChild(textEl('small', 'mkt-event-overflow', '+' + (current.length-3) + ' campanhas'));
+      grid.appendChild(cell);
+    }
+  }
+  function render() {renderOverview();renderList();renderCalendar();}
   function makeId() {
     if (globalThis.crypto && typeof crypto.randomUUID === 'function') return 'am-' + crypto.randomUUID();
     return 'am-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
@@ -254,6 +295,9 @@
     download('automatonia-conteudo.txt', (title ? title + '\n\n' : '') + body + '\n\nRASCUNHO PARA REVISÃO HUMANA\n', 'text/plain;charset=utf-8');
     info('Texto descarregado. Não foi publicado.');
   });
+  $('calendar-prev').addEventListener('click', () => {calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth()-1, 1);renderCalendar();});
+  $('calendar-next').addEventListener('click', () => {calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth()+1, 1);renderCalendar();});
+  $('calendar-today').addEventListener('click', () => {calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);renderCalendar();});
   for (const id of ['filter-business', 'filter-status']) $(id).addEventListener('change', renderList);
   $('filter-search').addEventListener('input', renderList);
   $('export-json').addEventListener('click', () => {
