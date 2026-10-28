@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "language": "pt-MZ",
+  "currency": "MZN",
+  "businesses": [
+    {
+      "id": "ebooks",
+      "name": "eBooks e guias originais",
+      "audience": "pessoas que querem aprender competências práticas",
+      "offer": "Guia introdutório de organização financeira pessoal com exemplos fictícios",
+      "validation": "10 entrevistas e 5 pedidos de amostra gratuita",
+      "channels": [
+        {
+          "id": "social",
+          "name": "Redes sociais orgânicas",
+          "hook": "3 passos para organizar o teu orçamento mensal",
+          "cta": "Solicita uma amostra gratuita",
+          "metric": "pedidos de amostra"
+        },
+        {
+          "id": "seo",
+          "name": "Pesquisa e SEO",
+          "hook": "Como criar um orçamento mensal: guia para principiantes",
+          "cta": "Consulta a amostra do guia",
+          "metric": "visitas e pedidos de amostra"
+        }
+      ]
+    },
+    {
+      "id": "templates",
+      "name": "Modelos e planilhas digitais",
+      "audience": "pequenas empresas e profissionais independentes",
+      "offer": "Planilha editável de receitas e despesas para pequenos negócios",
+      "validation": "10 testes de demonstração e 3 declarações de interesse",
+      "channels": [
+        {
+          "id": "vitrine",
+          "name": "Vitrine online",
+          "hook": "Controla as despesas do teu negócio numa planilha simples",
+          "cta": "Experimenta a demonstração",
+          "metric": "demonstrações utilizadas"
+        },
+        {
+          "id": "tutorial",
+          "name": "Tutoriais e conteúdo educativo",
+          "hook": "Como acompanhar as despesas do teu negócio semanalmente",
+          "cta": "Pede o modelo demonstrativo",
+          "metric": "pedidos e avaliações"
+        }
+      ]
+    },
+    {
+      "id": "afiliados",
+      "name": "Marketing de afiliados transparente",
+      "audience": "pessoas que avaliam ferramentas digitais",
+      "offer": "Comparativo de ferramentas digitais com testes e limites documentados",
+      "validation": "Confirmar parceiros elegíveis em Moçambique, termos, pagamentos e divulgação de comissão",
+      "channels": [
+        {
+          "id": "analises",
+          "name": "Análises de produtos",
+          "hook": "Como escolher uma ferramenta digital sem pagar por funções desnecessárias",
+          "cta": "Lê a comparação e as condições",
+          "metric": "visitas qualificadas"
+        },
+        {
+          "id": "newsletter",
+          "name": "Newsletter consentida",
+          "hook": "Ferramentas digitais úteis desta semana",
+          "cta": "Subscreve voluntariamente",
+          "metric": "subscrições autorizadas"
+        }
+      ]
+    }
+  ]
+}

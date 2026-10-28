@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pt-MZ">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Painel de marketing digital offline: seis canais, campanhas, calendário e métricas manuais, sem APIs pagas.">
+  <title>Centro de Marketing — Automatonia Digital</title>
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="marketing.css">
+</head>
+<body>
+  <header class="site-head">
+    <a class="brand" href="index.html"><span class="brand-symbol">A</span> AUTOMATONIA<span class="brand-accent">/digital</span></a>
+    <nav aria-label="Navegação"><a href="index.html">Início</a><a href="caixa.html">Gestor de Caixa</a><a href="marketing.html" aria-current="page">Marketing</a></nav>
+  </header>
+  <main class="wrap mkt-main">
+    <section class="mkt-hero">
+      <div class="eyebrow">AUTOMATONIA PRO V2 · OPERAÇÃO LOCAL</div>
+      <h1>Centro de <em>Marketing Digital</em></h1>
+      <p>Prepara conteúdos para seis canais, organiza publicações e regista os teus resultados. Não é necessário pagar uma API de inteligência artificial.</p>
+      <div class="mkt-disclaimer" role="note"><strong>Modo de preparação:</strong> este painel não publica nas redes, não envia e-mails nem recebe dados de plataformas. Os indicadores abaixo dependem dos valores que introduzires manualmente e começam a zero.</div>
+    </section>
+
+    <section class="mkt-summary" aria-label="Indicadores registados manualmente">
+      <div class="mkt-kpi"><span>Campanhas</span><strong id="kpi-total">0</strong><small>Ideias e rascunhos</small></div>
+      <div class="mkt-kpi"><span>Aprovadas</span><strong id="kpi-approved">0</strong><small>Aguardam execução</small></div>
+      <div class="mkt-kpi"><span>Publicadas</span><strong id="kpi-published">0</strong><small>Marcadas manualmente</small></div>
+      <div class="mkt-kpi"><span>Contactos</span><strong id="kpi-leads">0</strong><small>Registos manuais</small></div>
+      <div class="mkt-kpi"><span>Vendas</span><strong id="kpi-sales">0</strong><small>Registos manuais</small></div>
+    </section>
+
+    <section class="mkt-workspace">
+      <div class="mkt-column">
+        <article class="mkt-panel">
+          <div class="mkt-panel-title"><span class="mkt-num">01</span><h2>Gerar conteúdo inicial</h2></div>
+          <p>Escolhe uma das seis experiências comerciais. O texto é um modelo editável, não uma publicação automática.</p>
+          <label for="idea-channel">Modelo de campanha</label>
+          <select id="idea-channel">
+            <option value="social">eBooks · Redes sociais</option>
+            <option value="seo">eBooks · Artigo SEO</option>
+            <option value="vitrine">Ferramentas · Vitrine</option>
+            <option value="tutorial">Ferramentas · Tutorial</option>
+            <option value="analises">Afiliados · Análise</option>
+            <option value="newsletter">Afiliados · Newsletter consentida</option>
+          </select>
+          <button type="button" class="btn primary full" id="create-draft">Criar rascunho editável</button>
+          <p class="fine">As ideias incluem exemplos transparentes, sem testemunhos fictícios ou promessas de rendimento.</p>
+        </article>
+        <article class="mkt-panel">
+          <div class="mkt-panel-title"><span class="mkt-num">02</span><h2>Acompanhamento</h2></div>
+          <p>Estes valores são calculados exclusivamente a partir dos dados inseridos no editor.</p>
+          <div class="mkt-finance"><span>Receita declarada</span><strong id="kpi-revenue">0,00 MT</strong></div>
+          <div class="mkt-finance"><span>Custo declarado</span><strong id="kpi-cost">0,00 MT</strong></div>
+          <div class="mkt-finance"><span>Resultado estimado</span><strong id="kpi-profit">0,00 MT</strong></div>
+          <div class="mkt-finance"><span>Taxa de contactos / visualizações</span><strong id="kpi-rate">—</strong></div>
+          <p class="fine">Resultado = receita menos custo registado. Não inclui impostos, reembolsos ou despesas não informadas.</p>
+        </article>
+        <article class="mkt-panel">
+          <div class="mkt-panel-title"><span class="mkt-num">03</span><h2>Dados e segurança</h2></div>
+          <p>Os registos ficam neste navegador. Guarda regularmente uma cópia; limpar o histórico pode eliminar os dados.</p>
+          <div class="mkt-actions">
+            <button type="button" class="btn secondary" id="export-csv">Exportar CSV</button>
+            <button type="button" class="btn secondary" id="export-json">Backup JSON</button>
+            <label class="btn secondary file-label">Importar backup<input type="file" id="import-json" accept=".json,application/json" hidden></label>
+          </div>
+          <button type="button" id="reset-data" class="text-danger">Repor os seis exemplos iniciais</button>
+        </article>
+      </div>
+
+      <div class="mkt-column mkt-column-wide">
+        <section class="mkt-panel" id="calendar-panel">
+          <div class="mkt-panel-title"><span class="mkt-num">04</span><h2>Calendário editorial</h2></div>
+          <div class="mkt-calendar-toolbar">
+            <div class="mkt-calendar-month" id="calendar-month">Outubro 2026</div>
+            <div class="mkt-calendar-nav">
+              <button type="button" id="calendar-prev" aria-label="Mês anterior" class="mkt-small-btn">←</button>
+              <button type="button" id="calendar-today" class="mkt-small-btn">Hoje</button>
+              <button type="button" id="calendar-next" aria-label="Mês seguinte" class="mkt-small-btn">→</button>
+            </div>
+          </div>
+          <div class="mkt-calendar-scroller"><div id="calendar-grid" class="mkt-calendar" aria-label="Campanhas por data prevista"></div></div>
+          <p class="fine">O calendário apresenta datas que registaste. Não envia publicações automaticamente.</p>
+        </section>
+        <section class="mkt-panel">
+          <div class="mkt-panel-title"><span class="mkt-num">05</span><h2>Quadro de campanhas</h2></div>
+          <div class="mkt-filters">
+            <label>Negócio
+              <select id="filter-business"><option value="">Todos os negócios</option><option value="ebooks">eBooks e guias</option><option value="templates">Modelos e ferramentas</option><option value="afiliados">Marketing de afiliados</option></select>
+            </label>
+            <label>Estado
+              <select id="filter-status"><option value="">Todos</option><option value="ideia">Ideia</option><option value="rascunho">Rascunho</option><option value="aprovado">Aprovado</option><option value="publicado">Publicado (manual)</option></select>
+            </label>
+          </div>
+          <label class="sr-only" for="filter-search">Pesquisar campanhas</label>
+          <input type="search" id="filter-search" placeholder="Pesquisar pelo título ou conteúdo">
+          <div id="campaign-list" class="mkt-campaigns" aria-live="polite"></div>
+          <button type="button" id="new-custom" class="btn secondary">+ Criar campanha personalizada</button>
+        </section>
+
+        <section class="mkt-panel" id="editor-panel">
+          <div class="mkt-panel-title"><span class="mkt-num">06</span><h2 id="editor-heading">Editar campanha</h2></div>
+          <p>Revê o texto antes de publicar manualmente. A opção «Publicado» apenas actualiza este quadro.</p>
+          <form id="campaign-form" novalidate>
+            <div class="mkt-two">
+              <label>Negócio
+                <select id="edit-business" required><option value="ebooks">eBooks e guias</option><option value="templates">Modelos e ferramentas</option><option value="afiliados">Marketing de afiliados</option></select>
+              </label>
+              <label>Canal
+                <select id="edit-channel" required><option value="personalizado">Personalizado</option><option value="social">Redes sociais</option><option value="seo">Pesquisa/SEO</option><option value="vitrine">Vitrine</option><option value="tutorial">Tutorial</option><option value="analises">Análise</option><option value="newsletter">Newsletter</option></select>
+              </label>
+            </div>
+            <div class="mkt-two">
+              <label>Plataforma
+                <select id="edit-platform" required><option>Instagram</option><option>Facebook</option><option>TikTok</option><option>LinkedIn</option><option>Blog/SEO</option><option>Email autorizado</option><option>Outro</option></select>
+              </label>
+              <label>Estado
+                <select id="edit-status" required><option value="ideia">Ideia</option><option value="rascunho">Rascunho</option><option value="aprovado">Aprovado</option><option value="publicado">Publicado — confirmação manual</option></select>
+              </label>
+            </div>
+            <label>Título da campanha
+              <input id="edit-title" type="text" required maxlength="120" placeholder="Ex.: Demonstração gratuita da ferramenta">
+            </label>
+            <label>Texto / roteiro da publicação
+              <textarea id="edit-content" rows="9" required maxlength="5000" placeholder="Escreve um conteúdo próprio, claro e verificável..."></textarea>
+            </label>
+            <div class="mkt-two"><label>Data e hora previstas <span class="muted">(opcional)</span><input id="edit-scheduled" type="datetime-local"></label>
+              <div class="mkt-editor-help"><strong>Programação local</strong><p>Esta data não activa publicação automática ou lembrete.</p></div></div>
+            <h3 class="mkt-subtitle">Resultados registados manualmente</h3>
+            <div class="mkt-metrics">
+              <label>Visualizações<input id="edit-views" type="number" min="0" max="1000000000" step="1" value="0"></label>
+              <label>Contactos<input id="edit-leads" type="number" min="0" max="1000000000" step="1" value="0"></label>
+              <label>Vendas<input id="edit-sales" type="number" min="0" max="1000000000" step="1" value="0"></label>
+              <label>Receita (MT)<input id="edit-revenue" type="text" inputmode="decimal" value="0,00" placeholder="0,00"></label>
+              <label>Custo (MT)<input id="edit-cost" type="text" inputmode="decimal" value="0,00" placeholder="0,00"></label>
+            </div>
+            <p id="editor-error" class="error" role="alert" hidden></p>
+            <div class="mkt-form-actions">
+              <button type="submit" class="btn primary">Guardar campanha</button>
+              <button type="button" id="copy-content" class="btn secondary">Copiar conteúdo</button>
+              <button type="button" id="download-content" class="btn secondary">Descarregar TXT</button>
+              <button type="button" id="cancel-editor" class="btn secondary">Limpar editor</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+    <p id="mkt-status" class="mkt-status" role="status" aria-live="polite"></p>
+  </main>
+  <footer><div class="wrap foot"><span>© 2026 Automatonia Digital · Laboratório de marketing</span><span>Sem publicação automática, sem cobranças e sem dados de clientes no servidor.</span></div></footer>
+  <script src="marketing-core.js" defer></script><script src="marketing.js" defer></script>
+</body></html>

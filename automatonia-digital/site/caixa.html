@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-MZ">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Regista receitas e despesas em meticais. Aplicação local gratuita do Automatonia Digital.">
+  <title>Gestor de Caixa Simples — Automatonia</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-head"><a class="brand" href="index.html"><span class="brand-symbol">A</span> AUTOMATONIA<span class="brand-accent">/digital</span></a><nav aria-label="Navegação"><a href="index.html">← Página inicial</a><a href="guia-caixa.md" download>Guia</a><a href="marketing.html">Centro de Marketing</a></nav></header>
+<main class="wrap tool-main">
+  <div class="eyebrow">PRODUTO PILOTO · UTILIZAÇÃO GRATUITA</div><h1 class="tool-title">Gestor de Caixa Simples</h1><p class="tool-lede">Controlo básico de entradas e saídas em MT. Sem registo, sem subscrições e sem envio de dados.</p>
+  <div class="notice" role="note"><strong>Privacidade:</strong> os lançamentos são guardados apenas neste navegador. Se limpares os dados do browser ou mudares de dispositivo, podes perdê-los. Exporta um backup com regularidade. Não substitui contabilidade profissional.</div>
+  <section class="totals" aria-label="Resumo financeiro"><div class="total-box"><span>Saldo</span><strong id="balance">0,00 MT</strong></div><div class="total-box positive"><span>Entradas</span><strong id="income">0,00 MT</strong></div><div class="total-box negative"><span>Saídas</span><strong id="expenses">0,00 MT</strong></div></section>
+  <div class="work-grid"><section class="panel"><div class="panel-heading"><h2>Registar movimento</h2><p>Preenche os campos abaixo.</p></div><form id="entry-form" novalidate><label for="type">Tipo</label><select id="type" required><option value="entrada">Entrada</option><option value="saida">Saída</option></select><label for="description">Descrição</label><input id="description" type="text" maxlength="120" placeholder="Ex.: Venda de produtos" required><label for="amount">Valor (MT)</label><input id="amount" type="text" inputmode="decimal" maxlength="16" placeholder="Ex.: 1500,50" required><label for="date">Data</label><input id="date" type="date" required><p id="form-error" class="error" role="alert" hidden></p><button class="btn primary full" type="submit">Guardar movimento</button></form></section>
+    <section class="panel list-panel"><div class="panel-heading"><h2>Movimentos</h2><p id="record-count">Nenhum movimento registado.</p></div><div class="tool-actions"><button id="export-csv" class="btn secondary" type="button">Exportar CSV</button><button id="backup-json" class="btn secondary" type="button">Backup JSON</button><label class="btn secondary upload">Importar backup<input id="import-json" type="file" accept=".json,application/json" hidden></label></div><div id="entries" class="entries" aria-live="polite"><p class="empty">Ainda não existem movimentos.</p></div><button id="clear-all" class="text-danger" type="button">Apagar todos os movimentos</button><p id="action-status" class="fine" role="status"></p></section></div>
+</main><footer><div class="wrap foot"><span>Automatonia Digital · Demonstração local</span><a href="index.html">Voltar à página inicial</a></div></footer>
+<script src="caixa.js" defer></script>
+</body></html>
